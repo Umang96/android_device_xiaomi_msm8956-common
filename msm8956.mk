@@ -219,6 +219,7 @@ PRODUCT_PACKAGES += \
     init.qcom.rc \
     init.qcom.power.rc \
     init.qcom.usb.rc \
+    init.radon.rc \
     ueventd.qcom.rc
 
 # Sensors
