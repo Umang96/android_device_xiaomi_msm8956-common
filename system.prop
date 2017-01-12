@@ -1,3 +1,6 @@
+# Google Pixel Assistance Support
+ro.opa.eligible_device=true
+
 # Audio
 af.fast_track_multiplier=1
 audio_hal.period_size=192
