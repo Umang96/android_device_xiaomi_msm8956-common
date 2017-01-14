@@ -8,7 +8,7 @@ write /sys/android_touch/doubletap2wake  0
 write /sys/android_touch/vib_strength  75
 
 # KCAL
-write /sys/devices/platform/kcal_ctrl.0/kcal_sat 275
+write /sys/devices/platform/kcal_ctrl.0/kcal_sat 271
 write /sys/devices/platform/kcal_ctrl.0/kcal_val 249
 write /sys/devices/platform/kcal_ctrl.0/kcal_cont 264
 write /sys/devices/platform/kcal_ctrl.0/kcal "256 250 240"
@@ -16,8 +16,8 @@ write /sys/devices/platform/kcal_ctrl.0/kcal "256 250 240"
 # CHARGING RATE
 chmod 666 /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma
 chmod 666 /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma
-write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma 2000
-write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma 2000
+write /sys/module/qpnp_smbcharger/parameters/default_dcp_icl_ma 2200
+write /sys/module/qpnp_smbcharger/parameters/default_hvdcp_icl_ma 2200
 
 on enable-low-power
 
@@ -48,9 +48,9 @@ write /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster 1
 write /sys/devices/system/cpu/cpu0/core_ctl/not_preferred "1 0 0 0"
 write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 2
 write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 4
-write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 25
-write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 20
-write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 1800
+write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 35
+write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 30
+write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 1000
 write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 0
 chmod 0444 /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 
