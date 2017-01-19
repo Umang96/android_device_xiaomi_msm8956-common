@@ -1,0 +1,66 @@
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index 02148bc..c48d000 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -47,7 +47,7 @@ TARGET_BOOTLOADER_BOARD_NAME := msm8952
+ TARGET_NO_BOOTLOADER := true
+ 
+ # Kernel
+-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M
++BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 ramoops_memreserve=4M androidboot.selinux=permissive
+ BOARD_KERNEL_BASE := 0x80000000
+ BOARD_KERNEL_PAGESIZE := 2048
+ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
+diff --git a/rootdir/etc/init.qcom.rc b/rootdir/etc/init.qcom.rc
+index 1881cb5..e4cf6c7 100644
+--- a/rootdir/etc/init.qcom.rc
++++ b/rootdir/etc/init.qcom.rc
+@@ -184,6 +184,10 @@ on boot
+     chown system system /sys/class/leds/green/led_time
+     chown system system /sys/class/leds/blue/led_time
+ 
++    # Goodix FP
++    chown system system /dev/goodix_fp
++    chmod 0644 /dev/goodix_fp
++
+ # msm specific files that need to be created on /data
+ on post-fs-data
+     # Create directory for TZ Apps
+@@ -322,6 +326,7 @@ on post-fs-data
+     # Fingerprint
+     mkdir /data/fpc 0770 system system
+     mkdir /data/fpc/s 0770 system system
++    mkdir /data/goodix 0770 system system
+ 
+     mkdir /data/tombstones 0771 system system
+     mkdir /tombstones/modem 0771 system system
+@@ -642,6 +647,15 @@ service fingerprintd /system/bin/fingerprintd
+     socket fpce stream 0660 system system
+     writepid /dev/cpuset/system-background/tasks
+ 
++service gx_fpd /system/bin/gx_fpd
++    class late_start
++    user system
++    group system
++    disabled
++
++on property:persist.sys.fp.sensor=goodix
++    start gx_fpd
++
+ service ims_rtp_daemon /system/bin/ims_rtp_daemon
+    class main
+    user system
+diff --git a/rootdir/etc/init.qcom.sh b/rootdir/etc/init.qcom.sh
+index b011742..10e1ed3 100644
+--- a/rootdir/etc/init.qcom.sh
++++ b/rootdir/etc/init.qcom.sh
+@@ -116,3 +116,9 @@ if [ ! -f /firmware/verinfo/ver_info.txt -o "$prev_version_info" != "$cur_versio
+     chown radio.radio /data/misc/radio/ver_info.txt
+ fi
+ echo 1 > /data/misc/radio/copy_complete
++
++if [ -d /sys/class/goodix_fp ]; then
++    setprop persist.sys.fp.sensor goodix
++else
++    setprop persist.sys.fp.sensor fpc
++fi
